@@ -6,18 +6,24 @@ const App = (props) => {
   const addTrack= () =>{
     if ( trackInput.value)  {
       console.log('add track', trackInput.value);
-      props.onAddTrack(trackInput.value);
+      let idx= Date.now()
+      props.onAddTrack(trackInput.value , idx);
       trackInput = '' 
     } else 
  alert('Empty')
+  }
+
+  const deleteTrack = (e)=>{
+    console.log(e.target.innerText)
+     props.onDeleteTrack(e.target.innerText)
   }
   return (
     <div>
       <input type="text" name="" ref={(input)=> trackInput = input} />
       <button onClick={addTrack}>Add track</button>
       <ul>
-        {props.testStore.map((track, index) => (
-          <li key={index}>{track}</li>
+        {props.tracks.map((track, index) => (
+          <li key={index} onClick = { deleteTrack}>{track.name}</li>
         ))}
       </ul>
     </div>
@@ -27,14 +33,18 @@ const App = (props) => {
 // connect is a decorator
 export default connect(
   // accepts function 'mapStateToProps' will pass state as proops to the component
-  (state) => ({
-    testStore: state, // global state
+  state => ({
+    tracks: state.tracks, // global state
   }),
   // this will accept method 
   dispatch => ({
-    onAddTrack: (trackName) => {
+    onAddTrack: (trackName, idx) => {
     // this will accept object with type and payload
-     dispatch({type: 'ADD_TRACK', payload: trackName})
-    }
+     dispatch({type: 'ADD_TRACK', payload: {name: trackName , id: idx}})
+    },
+    onDeleteTrack: (trackName) => {
+      // this will accept object with type and payload
+       dispatch({type: 'DELETE_TRACK', payload: trackName})
+      }
   })
 )(App);
