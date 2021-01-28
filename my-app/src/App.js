@@ -1,25 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import { connect } from "react-redux";
 
-function App() {
+const App = (props) => {
+  console.log(props.testStore);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <input type="text" name="" />
+      <button>Add track</button>
+      <ul>
+        {props.testStore.map((track, index) => (
+          <li key={index}>{track}</li>
+        ))}
+      </ul>
     </div>
   );
-}
+};
 
-export default App;
+// connect is a decorator
+export default connect(
+  // accepts function 'mapStateToProps' will pass state as proops to the component
+  (state) => ({
+    testStore: state, // global state
+  }),
+  (dispatch) => ({})
+)(App);
