@@ -19,7 +19,6 @@
 
 import {createStore} from 'redux'
 
-
 function playlist(state = [], action){
   if (action.type === 'ADD_TRACK'){
     return [
@@ -31,17 +30,29 @@ function playlist(state = [], action){
 }
 // this will accept a function as an argument in createStore
 const store = createStore(playlist);
-
 console.log(store);
 
 // We can see how our store looks
 
 console.log(store.getState()); 
 
+// Grabbing html elems
+const addTrackBtn = document.getElementById('addTrack')
+const trackName = document.getElementById('trackInput');
+const list = document.getElementById('list')
 
-// We can see this message: 'subscribe' and the state when it changes: 
 store.subscribe(()=>{
   console.log('subscribe', store.getState())
+  // empty list to kater append store array's values
+   list.innerHTML= ''
+  // empty input
+   trackName.value = ''
+  // go through each state elem and append it to ul
+ store.getState().forEach(track => {
+   const li = document.createElement('li'); 
+   li.textContent = track
+   list.appendChild(li)
+ })
 })
 
 // How to change data in the store? 
@@ -49,5 +60,10 @@ store.subscribe(()=>{
 store.dispatch({type: 'ADD_TRACK', payload: 'Smells like spirit' })
 store.dispatch({type: 'ADD_TRACK', payload: 'Enter Sandman' })
 
-// subscribe ["Smells like spirit"]
-// subscribe (2) ["Smells like spirit", "Enter Sandman"]
+//Adding a listener to the button: 
+addTrackBtn.addEventListener('click', ()=>{
+  console.log('tack name' ,trackName.value)
+ trackName.value? store.dispatch({type: 'ADD_TRACK', payload: trackName.value}) : alert('Empty input')
+})
+
+
